@@ -1,30 +1,9 @@
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
 import { generateRandomFirstName, generateRandomLastName } from "./generateRandomName";
-
-const personSchema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  age: z.number({required_error: "Age is required"}).min(18, "Must be at least 18 years old"),
-  email: z.string().email().min(1, "Email is required"),
-  gender: z.enum(["m", "f"]),
-  terms: z.literal(true, {  // Field value must be exactly true
-    errorMap: () => ({ message: "You must accept Terms and Conditions" }),
-  }),
-  addresses: z.array(
-    z.object({
-      country: z.string().min(1, "Country is required"),
-      city: z.string().optional(),
-    })
-  ).min(1, "Provide at least 1 address"),
-}).refine(data => !!data.firstName || !!data.lastName, {
-  path: ["lastName"],
-  message: "Either first or last name should be filled in."
-}); // Cross field validation, triggered after all fields are valid
-
-type Person = z.infer<typeof personSchema>;
+import FieldState from "./FieldState";
+import { personSchema, type Person } from "./person";
 
 export default function Form() {
   const { register, control, handleSubmit, watch, reset, trigger, setValue,
@@ -64,7 +43,7 @@ export default function Form() {
   
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
       <div style={{
         display: "flex",
         flexDirection: "column",
@@ -74,7 +53,8 @@ export default function Form() {
           <label>
             First name:
             <input type="text" {...register("firstName")} />
-            {errors.firstName?.message}
+            <FieldState control={control} fieldName="firstName" />
+            {/* {errors.firstName?.message} */}
           </label>
           <button type="button" onClick={() => setValue("firstName", generateRandomFirstName())}>Random</button>
         </div>
@@ -82,7 +62,7 @@ export default function Form() {
           <label>
             Last name:
             <input type="text" {...register("lastName")} />
-            {errors.lastName?.message}
+            <FieldState control={control} fieldName="lastName" />
           </label>
           <button type="button" onClick={() => setValue("lastName", generateRandomLastName())}>Random</button>
         </div>
@@ -90,14 +70,14 @@ export default function Form() {
           <label>
             Age:
             <input type="number" {...register("age", { valueAsNumber: true })} min={0} />
-          {errors.age?.message}
+            <FieldState control={control} fieldName="age" />
           </label>
         </div>
         <div>
           <label>
             Email:
             <input type="email" {...register("email")} />
-            {errors.email?.message}
+            <FieldState control={control} fieldName="email" />
           </label>
         </div>
         <div>
@@ -112,7 +92,7 @@ export default function Form() {
               <input type="radio" {...register("gender")} value="f" />
             </label>
           </label>
-          {errors.gender?.message}
+          <FieldState control={control} fieldName="gender" />
         </div>
         <fieldset>
           <legend>Addesses</legend>
@@ -122,17 +102,21 @@ export default function Form() {
                 <h4>Address {i + 1}</h4>
                 <div>
                   Country: <input {...register(`addresses.${i}.country`)} />
-                  {errors.addresses?.[i]?.country?.message}
+                  <p className="error">
+                    {errors.addresses?.[i]?.country?.message}
+                  </p>
                 </div>
                 <div>
                   City: <input {...register(`addresses.${i}.city`)} />
-                  {errors.addresses?.[i]?.city?.message}
+                  <p className="error">
+                    {errors.addresses?.[i]?.city?.message}
+                  </p>
                 </div>
                 <button type="button" onClick={() => remove(i)}>Remove</button>
               </div>)
           }
           <button type="button" onClick={() => append({city: "", country: ""})}>Append</button>
-          {errors.addresses?.message}
+          <FieldState control={control} fieldName="addresses" />
         </fieldset>
         
         <div>          
@@ -140,7 +124,7 @@ export default function Form() {
             Terms:
             <input type="checkbox" {...register("terms")} />
           </label>
-          {errors.terms?.message}
+          <FieldState control={control} fieldName="terms" />
         </div>
         <div>
           <button type="button" onClick={() => trigger(["firstName", "lastName", "age", "addresses"])}>Validate</button>
