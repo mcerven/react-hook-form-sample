@@ -6,13 +6,16 @@ import FieldState from "./FieldState";
 import { personSchema, type Person } from "../models/person";
 
 export default function Form() {
-  const { register, control, handleSubmit, reset, trigger, setValue, // watch
-    setFocus,
+  const { register, control, handleSubmit, reset, trigger, setValue,
+    setFocus, // watch
     formState: { errors, isDirty, isValid, isSubmitSuccessful } 
   } = useForm<Person>({
-    mode: "onBlur", // When to trigger validation
+    mode: "onBlur", // When to trigger validation, "onSubmit" by default
     resolver: zodResolver(personSchema),
     defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
       age: 18,
       gender: "m",
       addresses: [{
