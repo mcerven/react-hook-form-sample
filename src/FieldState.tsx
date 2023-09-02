@@ -1,4 +1,4 @@
-import { Control, FieldErrors, useFormState } from 'react-hook-form'
+import { Control, FieldErrors, useFormState } from "react-hook-form";
 import type { Person } from "./person";
 
 interface FieldStateProps {

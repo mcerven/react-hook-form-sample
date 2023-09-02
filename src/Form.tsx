@@ -1,15 +1,14 @@
-import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { generateRandomFirstName, generateRandomLastName } from "./generateRandomName";
 import FieldState from "./FieldState";
 import { personSchema, type Person } from "./person";
 
 export default function Form() {
-  const { register, control, handleSubmit, watch, reset, trigger, setValue,
+  const { register, control, handleSubmit, reset, trigger, setValue, // watch
     formState: { errors, isDirty, isValid, isSubmitSuccessful } 
   } = useForm<Person>({
-    mode: "onBlur", // when to trigger validation
+    mode: "onBlur", // When to trigger validation
     resolver: zodResolver(personSchema), defaultValues: {
       age: 18,
       gender: "m",
@@ -25,22 +24,20 @@ export default function Form() {
   });
 
   const onSubmit = (data: Person) => {
-    console.log(data);
+    console.log("Submit", data);
     reset();
   }
 
-  console.log(errors)
+  console.log("Errors", errors);
 
-  // Watch name field changes, causes rerender
-  // console.log(watch("name"));
+  // Watch firstName field changes, causes rerender
+  // console.log(watch("firstName"));
 
-  React.useEffect(() => {
-    // Watch any changes, doesn't trigger rerender
-    watch((val) => {
-      console.log(val)
-    });
-  }, [watch])
-  
+  const firstName = useWatch({
+    control,
+    name: "firstName", // Without name supplied, will watch the entire form
+  });
+  console.log("firstName", firstName);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -98,7 +95,7 @@ export default function Form() {
           <legend>Addesses</legend>
           {
             fields.map((field, i) => 
-              <div id={field.id}>
+              <div key={field.id} id={field.id}>
                 <h4>Address {i + 1}</h4>
                 <div>
                   Country: <input {...register(`addresses.${i}.country`)} />
