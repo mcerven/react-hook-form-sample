@@ -3,7 +3,9 @@ import { z } from "zod";
 export const personSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  age: z.number({ required_error: "Age is required" }).min(18, "Must be at least 18 years old"),
+  age: z.coerce.number({
+    invalid_type_error: "Must be at least 18 years old",
+  }).min(18, "Must be at least 18 years old"),
   email: z.string().email().min(1, "Email is required"),
   gender: z.enum(["m", "f"]),
   terms: z.literal(true, {
