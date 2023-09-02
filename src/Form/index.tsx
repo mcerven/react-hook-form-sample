@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
-import { generateRandomFirstName, generateRandomLastName } from "./generateRandomName";
+import { generateRandomFirstName, generateRandomLastName } from "../helpers/generateRandomName";
 import FieldState from "./FieldState";
-import { personSchema, type Person } from "./person";
+import { personSchema, type Person } from "../models/person";
 
 export default function Form() {
   const { register, control, handleSubmit, reset, trigger, setValue, // watch
@@ -118,7 +118,7 @@ export default function Form() {
         
         <div>          
           <label>
-            Terms:
+            Terms and Conditions:
             <input type="checkbox" {...register("terms")} />
           </label>
           <FieldState control={control} fieldName="terms" />

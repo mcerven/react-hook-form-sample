@@ -22,21 +22,22 @@ export function generateRandomFirstName() {
 }
 
 const lastNames = [
-"Smith",
-"Johnson",
-"Williams",
-"Brown",
-"Jones",
-"Garcia",
-"Miller",
-"Davis",
-"Rodriguez",
-"Martinez",
-"Hernandez",
-"Lopez",
-"Gonzales",
-"Wilson",
-"Anderson"] as const;
+  "Smith",
+  "Johnson",
+  "Williams",
+  "Brown",
+  "Jones",
+  "Garcia",
+  "Miller",
+  "Davis",
+  "Rodriguez",
+  "Martinez",
+  "Hernandez",
+  "Lopez",
+  "Gonzales",
+  "Wilson",
+  "Anderson",
+] as const;
 
 export function generateRandomLastName() {
   return lastNames[Math.floor(Math.random() * lastNames.length)];
