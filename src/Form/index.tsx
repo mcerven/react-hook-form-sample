@@ -1,3 +1,4 @@
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { generateRandomFirstName, generateRandomLastName } from "../helpers/generateRandomName";
@@ -6,6 +7,7 @@ import { personSchema, type Person } from "../models/person";
 
 export default function Form() {
   const { register, control, handleSubmit, reset, trigger, setValue, // watch
+    setFocus,
     formState: { errors, isDirty, isValid, isSubmitSuccessful } 
   } = useForm<Person>({
     mode: "onBlur", // When to trigger validation
@@ -22,6 +24,10 @@ export default function Form() {
     name: "addresses",
     control,
   });
+
+  React.useEffect(() => {
+    setFocus("firstName")
+  }, [setFocus]);
 
   const onSubmit = (data: Person) => {
     console.log("Submit", data);
@@ -79,7 +85,7 @@ export default function Form() {
         </div>
         <div>
           <label>
-            Gender:
+            Gender:{" "}
             <label>
               Male
               <input type="radio" {...register("gender")} value="m" />
@@ -92,7 +98,7 @@ export default function Form() {
           <FieldState control={control} fieldName="gender" />
         </div>
         <fieldset>
-          <legend>Addesses</legend>
+          <legend>Addresses</legend>
           {
             fields.map((field, i) => 
               <div key={field.id} id={field.id}>
