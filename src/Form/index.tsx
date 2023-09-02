@@ -124,13 +124,13 @@ export default function Form() {
         
         <div>          
           <label>
-            Terms and Conditions:
+            Terms & Conditions:
             <input type="checkbox" {...register("terms")} />
           </label>
           <FieldState control={control} fieldName="terms" />
+          <button type="button" onClick={() => trigger(["terms"])}>Validate Terms & Conditions</button>
         </div>
         <div>
-          <button type="button" onClick={() => trigger(["firstName", "lastName", "age", "addresses"])}>Validate</button>
           <button type="submit">Submit</button>
         </div>
       </div>
