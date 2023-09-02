@@ -11,14 +11,16 @@ export default function Form() {
     formState: { errors, isDirty, isValid, isSubmitSuccessful } 
   } = useForm<Person>({
     mode: "onBlur", // When to trigger validation
-    resolver: zodResolver(personSchema), defaultValues: {
+    resolver: zodResolver(personSchema),
+    defaultValues: {
       age: 18,
       gender: "m",
       addresses: [{
         country: "",
         city: "",
-      }]
-    } });
+      }],
+    }
+  });
 
   const { fields, append, remove } = useFieldArray({
     name: "addresses",
