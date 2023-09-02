@@ -1,13 +1,12 @@
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
-import { generateRandomFirstName, generateRandomLastName } from "../helpers/generateRandomName";
 import FieldState from "./FieldState";
 import { personSchema, type Person } from "../models/person";
 
 export default function Form() {
-  const { register, control, handleSubmit, reset, trigger, setValue,
-    setFocus, // watch
+  const { register, control, handleSubmit, reset, trigger, setFocus,
+    // watch, setValue,
     formState: { errors, isDirty, isValid, isSubmitSuccessful } 
   } = useForm<Person>({
     mode: "onBlur", // When to trigger validation, "onSubmit" by default
@@ -31,7 +30,7 @@ export default function Form() {
   });
 
   React.useEffect(() => {
-    setFocus("firstName")
+    setFocus("firstName");
   }, [setFocus]);
 
   const onSubmit = (data: Person) => {
@@ -64,7 +63,6 @@ export default function Form() {
             <FieldState control={control} fieldName="firstName" />
             {/* {errors.firstName?.message} */}
           </label>
-          <button type="button" onClick={() => setValue("firstName", generateRandomFirstName())}>Random</button>
         </div>
         <div>
           <label>
@@ -72,7 +70,6 @@ export default function Form() {
             <input type="text" {...register("lastName")} />
             <FieldState control={control} fieldName="lastName" />
           </label>
-          <button type="button" onClick={() => setValue("lastName", generateRandomLastName())}>Random</button>
         </div>
         <div>
           <label>
